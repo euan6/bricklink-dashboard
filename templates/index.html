@@ -2,11 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minifigure Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <h1>My Minifigures</h1>
+    <ul>
+        {% for fig in minifigures %}
+        <li>
+            {% if fig.image %}
+            <img src="{{ url_for('static', filename=fig.image) }}" width="80">
+            {% endif %}
+            {{ fig.name }} ({{ fig.id }}) - £{{ fig.price }}
+        </li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
