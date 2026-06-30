@@ -110,7 +110,19 @@ def index():
         if result:
             minifigures.append(result)
 
-    return render_template("index.html", minifigures=minifigures)
+    # calculate total number of minifigures
+    total_figures = len(minifigures)
+
+    # calculate total value of minifigures
+    total_value = sum(fig["price"] for fig in minifigures if fig["price"] is not None)
+    total_value = round(total_value, 2)
+
+    return render_template(
+        "index.html", 
+        minifigures=minifigures,
+        total_figures=total_figures,
+        total_value=total_value
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)
