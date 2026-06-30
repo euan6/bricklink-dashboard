@@ -1,5 +1,266 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Inter:wght@400;500&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
 body {
-    font-family: sans-serif;
-    margin: 2rem;
-    background-color: #f5f5f5;
+    font-family: 'Inter', sans-serif;
+    background: #0f0f13;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 1.5rem;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.db-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.db-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #f0f0f0;
+    letter-spacing: -0.3px;
+}
+
+.db-title span {
+    color: #f0c040;
+}
+
+.db-layout {
+    display: grid;
+    grid-template-columns: 1fr 35%;
+    gap: 1.25rem;
+    flex: 1;
+    min-height: 0;
+}
+
+.db-left {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    min-height: 0;
+}
+
+.stat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    flex: 1;
+}
+
+.chart-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    flex: 3;
+    min-height: 0;
+}
+
+.stat-card {
+    background: #1a1a24;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    border-left: 3px solid #f0c040;
+}
+
+.chart-card,
+.sidebar {
+    border-left: 3px solid #f0c040;
+}
+
+.stat-card-title {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 0.75rem;
+}
+
+.stat-card-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-label {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.stat-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: #f0f0f0;
+}
+
+.stat-value.small {
+    font-size: 18px;
+}
+
+.stat-sub {
+    font-size: 13px;
+    color: #aaa;
+    margin-top: 2px;
+}
+
+.chart-card {
+    background: #1a1a24;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.chart-label {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 1rem;
+}
+
+canvas {
+    flex: 1;
+    min-height: 0;
+}
+
+.sidebar {
+    background: #1a1a24;
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-height: 0;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sidebar-title {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: #f0c040;
+    text-decoration: none;
+}
+
+.sidebar-link:hover {
+    color: #9b7400;
+}
+
+.fig-cards-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+    min-height: 0;
+}
+
+.fig-card {
+    background: #12121a;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 1px solid #2a2a38;
+    transition: border-color 0.15s;
+    text-decoration: none;
+    color: inherit;
+    flex: 1;
+}
+
+.fig-card:hover {
+    border-color: #f0c040;
+}
+
+.fig-img {
+    width: 80px;
+    height: 140px;
+    border-radius: 8px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.fig-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.fig-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.fig-rank {
+    font-size: 13px;
+    color: #f0c040;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 500;
+}
+
+.fig-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: #f0f0f0;
+    margin: 3px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fig-id {
+    font-size: 13px;
+    color: #666;
+}
+
+.fig-price {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #f0c040;
+}
+
+.fig-year {
+    font-size: 13px;
+    color: #666;
+    margin-top: 2px;
 }
