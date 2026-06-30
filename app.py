@@ -146,13 +146,25 @@ def index():
     year_counts = Counter(fig["year"] for fig in minifigures if fig["year"] is not None)
     year_distribution = dict(sorted(year_counts.items()))
 
+    # calculate theme distribution
+    theme_distribution = dict(theme_counts)
+
+    # calculate top 3 minifigures
+    top_3 = sorted(
+        [f for f in minifigures if f["price"] is not None],
+        key=lambda x: x["price"],
+        reverse=True
+    )[:3]
+
     return render_template(
         "index.html", 
         minifigures=minifigures,
         total_figures=total_figures,
         total_value=total_value,
         most_common_theme=most_common_theme,
-        year_distribution=year_distribution
+        year_distribution=year_distribution,
+        theme_distribution=theme_distribution,
+        top_3=top_3
     )
 
 if __name__ == "__main__":

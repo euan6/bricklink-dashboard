@@ -2,32 +2,108 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minifigure Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>My Minifigures</h1>
 
-    <p>Total figures: {{ total_figures }}</p>
-    <p>Total value: £{{ total_value }}</p>
+    <!-- dashboard header -->
+    <div class="db-header">
+        <div class="db-title">Minifig <span>Dashboard</span></div>
+    </div>
 
-    <ul>
-        {% for fig in minifigures %}
-        <li>
-            {% if fig.image %}
-            <img src="{{ url_for('static', filename=fig.image) }}" width="80">
-            {% endif %}
-            {{ fig.name }} ({{ fig.id }}) - £{{ fig.price }}
-        </li>
-        {% endfor %}
-    </ul>
+    <div class="db-layout">
+        <div class="db-left">
 
-    <p>Most common theme: {{ most_common_theme }}</p>
+            <div class="stat-row">
+                <!-- start of collection overview -->
+                <div class="stat-card">
+                    <div class="stat-card-title">Collection overview</div>
+                    <div class="stat-card-inner">
+                        <div class="stat-item">
+                            <span class="stat-label">Total value</span>
+                            <span class="stat-value">£{{ total_value }}</span>
+                            <span class="stat-sub">across all figures</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Total figures</span>
+                            <span class="stat-value">{{ total_figures }}</span>
+                            <span class="stat-sub">in your collection</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- end of collection overview -->
 
-    <p>Year distribution:</p>
-    <ul>
-        {% for year, count in year_distribution.items() %}
-        <li>{{ year }}: {{ count }}</li>
-        {% endfor %}
-    </ul>
+                <!-- start of highlights -->
+                <div class="stat-card">
+                    <div class="stat-card-title">Highlights</div>
+                    <div class="stat-card-inner">
+                        <div class="stat-item">
+                            <span class="stat-label">Top theme</span>
+                            <span class="stat-value small">{{ most_common_theme }}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Years span</span>
+                            <span class="stat-value small">
+                                {{ year_distribution.keys() | min }}&ndash;{{ year_distribution.keys() | max }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- end of highlights -->
+            </div>
+
+            <div class="chart-row">
+                <!-- start of theme breakdown -->
+                <div class="chart-card">
+                    <div class="chart-label">Theme breakdown</div>
+                    <canvas id="themeChart"></canvas>
+                </div>
+                <!-- end of theme breakdown -->
+
+                <!-- start of distribution by year -->
+                <div class="chart-card">
+                    <div class="chart-label">Distribution by year</div>
+                    <canvas id="yearChart"></canvas>
+                </div>
+                <!-- end of distribution by year -->
+            </div>
+
+        </div>
+
+        <div class="sidebar">
+            <!-- start of top 3 sidebar -->
+            <div class="sidebar-header">
+                <span class="sidebar-title">Top 3 most valuable</span>
+                <a class="sidebar-link" href="#">View all</a>
+            </div>
+            <div class="fig-cards-wrap">
+               {% for fig in top_3 %}
+                <div class="fig-card">
+                    <div class="fig-img">
+                        {% if fig.image %}
+                        <img src="{{ url_for('static', filename=fig.image) }}" alt="{{ fig.name }}">
+                        {% endif %}
+                    </div>
+                    <div class="fig-info">
+                        <div class="fig-rank">#{{ loop.index }}</div>
+                        <div class="fig-id">{{ fig.id }}</div>
+                        <div class="fig-name">{{ fig.name }}</div>
+                        <div class="fig-price">£{{ fig.price }}</div>
+                        <div class="fig-year">{{ fig.year }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <!-- end of top 3 sidebar -->
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script id="chart-data" type="application/json">{{ theme_distribution | tojson }}</script>
+    <script id="year-data" type="application/json">{{ year_distribution | tojson }}</script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
 </body>
 </html>
