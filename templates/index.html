@@ -20,5 +20,14 @@
         </li>
         {% endfor %}
     </ul>
+
+    <p>Most common theme: {{ most_common_theme }}</p>
+
+    <p>Year distribution:</p>
+    <ul>
+        {% for year, count in year_distribution.items() %}
+        <li>{{ year }}: {{ count }}</li>
+        {% endfor %}
+    </ul>
 </body>
 </html>

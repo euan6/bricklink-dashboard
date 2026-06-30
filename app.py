@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from requests_oauthlib import OAuth1
+from collections import Counter
 import requests
 import json
 import os
@@ -19,6 +20,17 @@ auth = OAuth1(
 IMAGE_DIR = os.path.join("static", "images")
 os.makedirs(IMAGE_DIR, exist_ok=True)
 
+# prefixes of minifigure themes
+THEME_PREFIXES = {
+    "sw": "Star Wars",
+    "col": "Collectible Minifigures",
+    "cty": "City",
+    "sh": "Marvel/DC Super Heroes",
+    "hp": "Harry Potter",
+    "njo": "Ninjago",
+    "cas": "Castle",
+    "twn": "Town"
+}
 
 def load_minifigure_ids():
     # reads a list of BrickLink item numbers from manually maintained file
@@ -61,6 +73,13 @@ def cache_image(item_no, image_url):
     # return path relative to static folder
     return f"images/{local_filename}"
 
+def get_theme_from_id(item_no):
+    # return the theme based on the minifigures prefix 
+    for prefix, theme_name in THEME_PREFIXES.items():
+        if item_no.startswith(prefix):
+            return theme_name
+    return "Other"
+
 def get_minifigure_data(item_no):
     # look up basic catalogue info for the minifigure
     catalog_url = f"https://api.bricklink.com/api/store/v1/items/minifig/{item_no}"
@@ -96,7 +115,9 @@ def get_minifigure_data(item_no):
         "id": item_no,
         "name": catalog_data.get("name"),
         "price": avg_price,
-        "image": local_image_path
+        "image": local_image_path,
+        "theme": get_theme_from_id(item_no),
+        "year": catalog_data.get("year_released")
     }
 
 @app.route("/")
@@ -117,11 +138,21 @@ def index():
     total_value = sum(fig["price"] for fig in minifigures if fig["price"] is not None)
     total_value = round(total_value, 2)
 
+    # calculate the most common theme of minifigures
+    theme_counts = Counter(fig["theme"] for fig in minifigures)
+    most_common_theme = theme_counts.most_common(1)[0][0] if theme_counts else None
+
+    # calculate the year distribution of minifigures
+    year_counts = Counter(fig["year"] for fig in minifigures if fig["year"] is not None)
+    year_distribution = dict(sorted(year_counts.items()))
+
     return render_template(
         "index.html", 
         minifigures=minifigures,
         total_figures=total_figures,
-        total_value=total_value
+        total_value=total_value,
+        most_common_theme=most_common_theme,
+        year_distribution=year_distribution
     )
 
 if __name__ == "__main__":
