@@ -101,7 +101,7 @@ def get_minifigure_data(item_no):
 
     # look up average sold price for the minifigure (used condition)
     price_url = f"https://api.bricklink.com/api/store/v1/items/minifig/{item_no}/price"
-    price_response = requests.get(price_url, auth=auth, params={"guide_type": "sold", "new_or_used": "U"})
+    price_response = requests.get(price_url, auth=auth, params={"guide_type": "sold", "new_or_used": "N"})
 
     avg_price = None
     if price_response.status_code == 200:
