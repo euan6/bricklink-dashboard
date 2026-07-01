@@ -30,7 +30,7 @@ body {
 
 .db-title {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 22px;
+    font-size: clamp(16px, 1.8vw, 22px);
     font-weight: 600;
     color: #f0f0f0;
     letter-spacing: -0.3px;
@@ -112,13 +112,13 @@ body {
 
 .stat-value {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 24px;
+    font-size: clamp(16px, 2vw, 24px);
     font-weight: 600;
     color: #f0f0f0;
 }
 
 .stat-value.small {
-    font-size: 18px;
+    font-size: clamp(14px, 1.5vw, 18px);
 }
 
 .stat-sub {
@@ -271,4 +271,64 @@ canvas {
     font-size: 13px;
     color: #666;
     margin-top: 2px;
+}
+
+/* for sizes under 1280px */
+@media (max-width: 1280px) {
+    body {
+        padding: 1rem;
+    }
+
+    .db-layout {
+        grid-template-columns: 1fr 32%;
+    }
+
+    .stat-card {
+        padding: 1rem;
+    }
+
+    .chart-card {
+        padding: 1rem;
+    }
+
+    .sidebar {
+        padding: 1rem;
+        gap: 0.75rem;
+    }
+
+    .fig-card {
+        padding: 0.75rem 1rem;
+    }
+
+    .fig-img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .fig-name {
+        font-size: 12px;
+    }
+
+    .fig-price {
+        font-size: 13px;
+    }
+}
+
+/* for sizes under 1024px */
+@media (max-width: 1024px) {
+    html, body {
+        overflow: auto;
+    }
+
+    .db-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .chart-row {
+        min-height: 250px;
+    }
 }
