@@ -32,6 +32,7 @@ new Chart(document.getElementById('themeChart'), {
             }
         },
         cutout: '65%',
+        responsive: true,
         maintainAspectRatio: false,
         animation: { duration: 600 }
     }
@@ -74,6 +75,7 @@ new Chart(document.getElementById('yearChart'), {
                 border: { display: false }
             }
         },
+        responsive: true,
         maintainAspectRatio: false,
         animation: { duration: 600 }
     }
