@@ -5,6 +5,7 @@ import requests
 import json
 import os
 import config
+import time
 
 app = Flask(__name__)
 
@@ -31,6 +32,9 @@ THEME_PREFIXES = {
     "cas": "Castle",
     "twn": "Town"
 }
+
+CACHE_FILE = "cache.json"
+CACHE_TTL = 86400 # 24hrs in seconds
 
 def load_minifigure_ids():
     # reads a list of BrickLink item numbers from manually maintained file
@@ -80,7 +84,30 @@ def get_theme_from_id(item_no):
             return theme_name
     return "Other"
 
-def get_minifigure_data(item_no):
+def load_cache():
+    # load cache file
+    if os.path.exists(CACHE_FILE):
+        with open(CACHE_FILE) as f:
+            return json.load(f)
+    return {}
+
+def save_cache(cache):
+    # write to cache file
+    with open(CACHE_FILE, "w") as f:
+        json.dump(cache, f, indent=2)
+
+def is_cache_valid(cache, item_no):
+    # check if cache is valid
+    if item_no not in cache:
+        return False
+    age = time.time() - cache[item_no].get("cached_at", 0)
+    return age < CACHE_TTL
+
+def get_minifigure_data(item_no, cache):
+    # rteurn cached data if its still fresh
+    if is_cache_valid(cache, item_no):
+        return cache[item_no]["data"]
+
     # look up basic catalogue info for the minifigure
     catalog_url = f"https://api.bricklink.com/api/store/v1/items/minifig/{item_no}"
     catalog_response = requests.get(catalog_url, auth=auth)
@@ -111,7 +138,7 @@ def get_minifigure_data(item_no):
         if raw_price is not None:
             avg_price = round(float(raw_price), 2)
 
-    return {
+    result = {
         "id": item_no,
         "name": catalog_data.get("name"),
         "price": avg_price,
@@ -120,14 +147,25 @@ def get_minifigure_data(item_no):
         "year": catalog_data.get("year_released")
     }
 
+    # save to cache with timestamp
+    cache[item_no] = {
+        "data": result,
+        "cached_at": time.time()
+    }
+    save_cache(cache)
+
+    return result
+
+
 @app.route("/")
 def index():
+    cache = load_cache()
     item_ids = load_minifigure_ids()
     minifigures = []
 
     # build full list of minifigure data to pass to the template
     for item_id in item_ids:
-        result = get_minifigure_data(item_id)
+        result = get_minifigure_data(item_id, cache)
         if result:
             minifigures.append(result)
 
