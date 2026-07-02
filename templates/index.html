@@ -20,7 +20,7 @@
                 <!-- start of collection overview -->
                 <div class="stat-card">
                     <div class="stat-card-title">Collection overview</div>
-                    <div class="stat-card-inner">
+                    <div class="stat-card-inner" style="grid-template-columns: 1fr 1fr 1fr;">
                         <div class="stat-item">
                             <span class="stat-label">Total value</span>
                             <span class="stat-value">£{{ total_value }}</span>
@@ -30,6 +30,11 @@
                             <span class="stat-label">Total figures</span>
                             <span class="stat-value">{{ total_figures }}</span>
                             <span class="stat-sub">in your collection</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Avg price</span>
+                            <span class="stat-value">£{{ avg_price }}</span>
+                            <span class="stat-sub">per figure</span>
                         </div>
                     </div>
                 </div>
@@ -41,11 +46,11 @@
                     <div class="stat-card-inner">
                         <div class="stat-item">
                             <span class="stat-label">Top theme</span>
-                            <span class="stat-value small">{{ most_common_theme }}</span>
+                            <span class="stat-value">{{ most_common_theme }}</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-label">Years span</span>
-                            <span class="stat-value small">
+                            <span class="stat-value">
                                 {{ year_distribution.keys() | min }}&ndash;{{ year_distribution.keys() | max }}
                             </span>
                         </div>
