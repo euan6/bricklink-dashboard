@@ -136,7 +136,7 @@ def get_minifigure_data(item_no, cache):
         raw_price = price_data.get("avg_price")
         # round price to currency formatting
         if raw_price is not None:
-            avg_price = round(float(raw_price), 2)
+            avg_price = f"{float(raw_price):.2f}"
 
     result = {
         "id": item_no,
@@ -173,8 +173,8 @@ def index():
     total_figures = len(minifigures)
 
     # calculate total value of minifigures
-    total_value = sum(fig["price"] for fig in minifigures if fig["price"] is not None)
-    total_value = round(total_value, 2)
+    total_value = sum(float(fig["price"]) for fig in minifigures if fig["price"] is not None)
+    total_value = f"{total_value:.2f}"
 
     # calculate the most common theme of minifigures
     theme_counts = Counter(fig["theme"] for fig in minifigures)
