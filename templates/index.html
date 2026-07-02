@@ -43,10 +43,14 @@
                 <!-- start of highlights -->
                 <div class="stat-card">
                     <div class="stat-card-title">Highlights</div>
-                    <div class="stat-card-inner">
+                    <div class="stat-card-inner" style="grid-template-columns: 1fr 0.5fr 1fr;">
                         <div class="stat-item">
                             <span class="stat-label">Top theme</span>
                             <span class="stat-value">{{ most_common_theme }}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Themes</span>
+                            <span class="stat-value small">{{ num_themes }}</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-label">Years span</span>

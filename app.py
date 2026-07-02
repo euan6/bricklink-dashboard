@@ -198,6 +198,9 @@ def index():
     avg_price_raw = sum(float(fig['price']) for fig in minifigures if fig['price'] is not None) / total_figures if total_figures > 0 else 0
     avg_price = f"{avg_price_raw:.2f}"
 
+    # calculate the number of different themes
+    num_themes = len(theme_counts)
+
     return render_template(
         "index.html", 
         minifigures=minifigures,
@@ -207,7 +210,8 @@ def index():
         year_distribution=year_distribution,
         theme_distribution=theme_distribution,
         top_3=top_3,
-        avg_price=avg_price
+        avg_price=avg_price,
+        num_themes=num_themes
     )
 
 if __name__ == "__main__":
