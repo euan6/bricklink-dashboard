@@ -34,7 +34,7 @@ THEME_PREFIXES = {
 }
 
 CACHE_FILE = "cache.json"
-CACHE_TTL = 86400 # 24hrs in seconds
+CACHE_TTL = 31536000 # 1 year in seconds
 
 def load_minifigure_ids():
     # reads a list of BrickLink item numbers from manually maintained file
