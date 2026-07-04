@@ -42,7 +42,7 @@ body {
 
 .db-layout {
     display: grid;
-    grid-template-columns: 1fr 35%;
+    grid-template-columns: 1fr 32%;
     gap: 1.25rem;
     flex: 1;
     min-height: 0;
