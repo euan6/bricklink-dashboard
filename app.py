@@ -190,7 +190,7 @@ def index():
     # calculate top 3 minifigures
     top_3 = sorted(
         [f for f in minifigures if f["price"] is not None],
-        key=lambda x: x["price"],
+        key=lambda x: float(x["price"]),
         reverse=True
     )[:3]
 
