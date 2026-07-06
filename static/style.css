@@ -55,6 +55,12 @@ body {
     min-height: 0;
 }
 
+.db-last-updated {
+    font-size: 11px;
+    color: #666;
+    letter-spacing: 0.5px;
+}
+
 .stat-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
