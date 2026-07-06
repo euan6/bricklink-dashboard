@@ -25,13 +25,7 @@ os.makedirs(IMAGE_DIR, exist_ok=True)
 # prefixes of minifigure themes
 THEME_PREFIXES = {
     "sw": "Star Wars",
-    "col": "Collectible Minifigures",
-    "cty": "City",
-    "sh": "Marvel/DC Super Heroes",
-    "hp": "Harry Potter",
-    "njo": "Ninjago",
-    "cas": "Castle",
-    "twn": "Town"
+    "sc": "Speed Champions"
 }
 
 CACHE_FILE = "cache.json"
