@@ -6,6 +6,7 @@ import json
 import os
 import config
 import time
+import datetime
 
 app = Flask(__name__)
 
@@ -201,6 +202,17 @@ def index():
     # calculate the number of different themes
     num_themes = len(theme_counts)
 
+    # 
+    cached_times = [
+        cache[item_id]["cached_at"]
+        for item_id in item_ids
+        if item_id in cache
+    ]
+    last_updated = (
+        datetime.datetime.fromtimestamp(max(cached_times)).strftime("%d %b %Y, %H:%M")
+        if cached_times else "Never"
+    )
+
     return render_template(
         "index.html", 
         minifigures=minifigures,
@@ -211,7 +223,8 @@ def index():
         theme_distribution=theme_distribution,
         top_3=top_3,
         avg_price=avg_price,
-        num_themes=num_themes
+        num_themes=num_themes,
+        last_updated=last_updated
     )
 
 if __name__ == "__main__":
