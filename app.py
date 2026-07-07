@@ -25,7 +25,17 @@ os.makedirs(IMAGE_DIR, exist_ok=True)
 # prefixes of minifigure themes
 THEME_PREFIXES = {
     "sw": "Star Wars",
-    "sc": "Speed Champions"
+    "sc": "Speed Champions",
+    "poc": "Pirates of the Caribbean",
+    "toy": "Toy Story",
+    "atl": "Atlantis",
+    "iaj": "Indiana Jones",
+    "pm": "Power Miners",
+    "ac": "Space",
+    "pi": "Pirates",
+    "hp": "Harry Potter",
+    "pha": "Pharaoh's Quest",
+    "col": "Collectible Minifigures"
 }
 
 CACHE_FILE = "cache.json"
