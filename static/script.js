@@ -9,7 +9,8 @@ new Chart(document.getElementById('themeChart'), {
             data: Object.values(themeData),
             backgroundColor: [
                 '#f0c040', '#4a9eff', '#5dcaa5', '#c084fc',
-                '#f97316', '#ec4899', '#14b8a6', '#a3e635'
+                '#f97316', '#ec4899', '#14b8a6', '#a3e635',
+                '#1c72d3', '#c6e635', '#ff520e', '#852ae1'
             ],
             borderWidth: 0,
             hoverOffset: 4
