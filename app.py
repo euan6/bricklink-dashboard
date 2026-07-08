@@ -35,7 +35,8 @@ THEME_PREFIXES = {
     "pi": "Pirates",
     "hp": "Harry Potter",
     "pha": "Pharaoh's Quest",
-    "col": "Collectible Minifigures"
+    "col": "Collectible Minifigures",
+    "cty": "City"
 }
 
 CACHE_FILE = "cache.json"
