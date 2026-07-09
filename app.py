@@ -122,6 +122,11 @@ def get_minifigure_data(item_no, cache):
         # item doesnt exist or request failed, skip
         return None
 
+    response_json = catalog_response.json()
+    if "data" not in response_json:
+        print(f"No data returned for {item_no}: {response_json}")
+        return None
+
     catalog_data = catalog_response.json()["data"]
     image_url = catalog_data.get("image_url")
 
