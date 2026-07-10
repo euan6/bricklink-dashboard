@@ -1,22 +1,15 @@
 from flask import Flask, render_template
-from requests_oauthlib import OAuth1
 from collections import Counter
-import requests
 import json
 import os
 import config
 import time
 import datetime
+# import other python files
+import bricklink
+import cache as cache_module
 
 app = Flask(__name__)
-
-# set up OAuth so every request to BrickLink is signed with credentials
-auth = OAuth1(
-    config.CONSUMER_KEY,
-    config.CONSUMER_SECRET,
-    config.TOKEN,
-    config.TOKEN_SECRET
-)
 
 # folder of downloaded images
 IMAGE_DIR = os.path.join("static", "images")
@@ -39,8 +32,13 @@ THEME_PREFIXES = {
     "cty": "City"
 }
 
-CACHE_FILE = "cache.json"
-CACHE_TTL = 31536000 # 1 year in seconds
+def get_theme_from_id(item_no):
+    # return the theme based on the minifigures prefix 
+    for prefix, theme_name in THEME_PREFIXES.items():
+        if item_no.startswith(prefix):
+            return theme_name
+    print(f"Unrecognised theme prefix for item: {item_no}")
+    return "Other"
 
 def load_minifigure_ids():
     if not os.path.exists("minifigures.json"):
@@ -70,12 +68,7 @@ def cache_image(item_no, image_url):
     if not os.path.exists(local_path):
         # BrickLink blocks server to server requests for images
         # mask the request to look like a browser visiting the site
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-            "Referer": "https://www.bricklink.com/"
-        }
-        response = requests.get(image_url, headers=headers)
-        print(f"Download status code: {response.status_code}")
+        response = bricklink.fetch_image(image_url)
         if response.status_code == 200:
             # if status code 200, save image
             with open(local_path, "wb") as f:
@@ -92,49 +85,15 @@ def cache_image(item_no, image_url):
     # return path relative to static folder
     return f"images/{local_filename}"
 
-def get_theme_from_id(item_no):
-    # return the theme based on the minifigures prefix 
-    for prefix, theme_name in THEME_PREFIXES.items():
-        if item_no.startswith(prefix):
-            return theme_name
-    return "Other"
-
-def load_cache():
-    if not os.path.exists(CACHE_FILE):
-        # return empty cache if CACHE_FILE not found
-        return {}
-    try:
-        # load the cache file
-        with open(CACHE_FILE) as f:
-            return json.load(f)
-    except json.JSONDecodeError:
-        # JSON exception thrown if file is corrupted
-        print("cache.json is corrupted, starting with empty cache")
-        return {}
-
-def save_cache(cache):
-    # write to cache file
-    with open(CACHE_FILE, "w") as f:
-        json.dump(cache, f, indent=2)
-
-def is_cache_valid(cache, item_no):
-    # check if cache is valid
-    if item_no not in cache:
-        return False
-    age = time.time() - cache[item_no].get("cached_at", 0)
-    return age < CACHE_TTL
-
 def get_minifigure_data(item_no, cache):
     # return cached data if its still fresh
-    if is_cache_valid(cache, item_no):
+    if cache_module.is_cache_valid(cache, item_no):
         return cache[item_no]["data"]
 
-    # look up basic catalogue info for the minifigure
-    catalog_url = f"https://api.bricklink.com/api/store/v1/items/minifig/{item_no}"
-    catalog_response = requests.get(catalog_url, auth=auth)
+    catalog_response = bricklink.fetch_catalog(item_no)
 
     if catalog_response.status_code != 200:
-        # item doesnt exist or request failed, skip
+        # item does not exist or request failed, skip
         return None
 
     response_json = catalog_response.json()
@@ -160,8 +119,7 @@ def get_minifigure_data(item_no, cache):
     local_image_path = cache_image(item_no, image_url)
 
     # look up average sold price for the minifigure (used condition)
-    price_url = f"https://api.bricklink.com/api/store/v1/items/minifig/{item_no}/price"
-    price_response = requests.get(price_url, auth=auth, params={"guide_type": "sold", "new_or_used": "N"})
+    price_response = bricklink.fetch_price(item_no)
 
     avg_price = None
     if price_response.status_code == 200:
@@ -185,13 +143,13 @@ def get_minifigure_data(item_no, cache):
         "data": result,
         "cached_at": time.time()
     }
-    save_cache(cache)
+    cache_module.save_cache(cache)
 
     return result
 
 @app.route("/")
 def index():
-    cache = load_cache()
+    cache = cache_module.load_cache()
     item_ids = load_minifigure_ids()
     minifigures = []
 
