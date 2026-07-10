@@ -1,5 +1,7 @@
 from flask import Flask, render_template
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from threading import Lock
 import json
 import os
 import config
@@ -10,6 +12,8 @@ import bricklink
 import cache as cache_module
 
 app = Flask(__name__)
+
+_cache_lock = Lock()
 
 # folder of downloaded images
 IMAGE_DIR = os.path.join("static", "images")
@@ -139,11 +143,12 @@ def get_minifigure_data(item_no, cache):
     }
 
     # save to cache with timestamp
-    cache[item_no] = {
-        "data": result,
-        "cached_at": time.time()
-    }
-    cache_module.save_cache(cache)
+    with _cache_lock:
+        cache[item_no] = {
+            "data": result,
+            "cached_at": time.time()
+        }
+        cache_module.save_cache(cache)
 
     return result
 
@@ -155,10 +160,12 @@ def index():
 
     try:
         # build full list of minifigure data to pass to the template
-        for item_id in item_ids:
-            result = get_minifigure_data(item_id, cache)
-            if result:
-                minifigures.append(result)
+        with ThreadPoolExecutor(max_workers=20) as executor:
+            futures = {executor.submit(get_minifigure_data, item_id, cache): item_id for item_id in item_ids}
+            for future in as_completed(futures):
+                result = future.result()
+                if result:
+                    minifigures.append(result)
     except ConnectionError as e:
         # throw exceptions if connection has an error or IP has mismatched
         error = str(e)
