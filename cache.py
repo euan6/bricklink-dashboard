@@ -3,7 +3,7 @@ import os
 import time
 
 CACHE_FILE = "cache.json"
-CACHE_TTL = 31536000 # 1 year in seconds
+CACHE_TTL = 86400 # 1 day in seconds
 
 def load_cache():
     if not os.path.exists(CACHE_FILE):
