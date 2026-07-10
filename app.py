@@ -44,7 +44,8 @@ CACHE_TTL = 31536000 # 1 year in seconds
 
 def load_minifigure_ids():
     if not os.path.exists("minifigures.json"):
-        print("minifigures,json not found, starting with an empty collection")
+        # handle if JSON file is not found
+        print("minifigures.json not found, starting with an empty collection")
         return []
     try:
         # reads a list of BrickLink item numbers from manually maintained file
@@ -99,11 +100,17 @@ def get_theme_from_id(item_no):
     return "Other"
 
 def load_cache():
-    # load cache file
-    if os.path.exists(CACHE_FILE):
+    if not os.path.exists(CACHE_FILE):
+        # return empty cache if CACHE_FILE not found
+        return {}
+    try:
+        # load the cache file
         with open(CACHE_FILE) as f:
             return json.load(f)
-    return {}
+    except json.JSONDecodeError:
+        # JSON exception thrown if file is corrupted
+        print("cache.json is corrupted, starting with empty cache")
+        return {}
 
 def save_cache(cache):
     # write to cache file
