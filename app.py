@@ -43,10 +43,18 @@ CACHE_FILE = "cache.json"
 CACHE_TTL = 31536000 # 1 year in seconds
 
 def load_minifigure_ids():
-    # reads a list of BrickLink item numbers from manually maintained file
-    with open("minifigures.json") as f:
-        data = json.load(f)
-    return data["minifigures"]
+    if not os.path.exists("minifigures.json"):
+        print("minifigures,json not found, starting with an empty collection")
+        return []
+    try:
+        # reads a list of BrickLink item numbers from manually maintained file
+        with open("minifigures.json") as f:
+            data = json.load(f)
+        return data.get("minifigures", [])
+    except json.JSONDecodeError:
+        # JSON exception thrown if file is malformed
+        print("minifigures.json is malformed, starting with empty collection")
+        return []
 
 def cache_image(item_no, image_url):
     # if BrickLink doesnt return an image, nothing to cache
