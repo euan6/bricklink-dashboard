@@ -125,7 +125,7 @@ def is_cache_valid(cache, item_no):
     return age < CACHE_TTL
 
 def get_minifigure_data(item_no, cache):
-    # rteurn cached data if its still fresh
+    # return cached data if its still fresh
     if is_cache_valid(cache, item_no):
         return cache[item_no]["data"]
 
@@ -139,14 +139,21 @@ def get_minifigure_data(item_no, cache):
 
     response_json = catalog_response.json()
     if "data" not in response_json:
+        description = response_json.get("meta", {}).get("description", "")
+        message = response_json.get("meta", {}).get("message", "")
+        if "TOKEN_IP_MISMATCHED" in description:
+            # if IP does not match BrickLink submitted IP
+            raise ConnectionError("TOKEN_IP_MISMATCHED")
+        if "SIGNATURE_INVALID" in description or "BAD_OAUTH_REQUEST" in message:
+            # if credentials have not been authenticated
+            raise ConnectionError("BrickLink authentication failed")
         print(f"No data returned for {item_no}: {response_json}")
         return None
 
-    catalog_data = catalog_response.json()["data"]
+    catalog_data = response_json["data"]
     image_url = catalog_data.get("image_url")
 
     # BrickLink sometimes returns URL's with prefix '//' instead of 'https://'
-    # this isnt valid so fix up
     if image_url and image_url.startswith("//"):
         image_url = "https:" + image_url
 
@@ -160,7 +167,7 @@ def get_minifigure_data(item_no, cache):
     if price_response.status_code == 200:
         price_data = price_response.json()["data"]
         raw_price = price_data.get("avg_price")
-        # round price to currency formatting
+        # format price to two decimal places
         if raw_price is not None:
             avg_price = f"{float(raw_price):.2f}"
 
@@ -182,18 +189,30 @@ def get_minifigure_data(item_no, cache):
 
     return result
 
-
 @app.route("/")
 def index():
     cache = load_cache()
     item_ids = load_minifigure_ids()
     minifigures = []
 
-    # build full list of minifigure data to pass to the template
-    for item_id in item_ids:
-        result = get_minifigure_data(item_id, cache)
-        if result:
-            minifigures.append(result)
+    try:
+        # build full list of minifigure data to pass to the template
+        for item_id in item_ids:
+            result = get_minifigure_data(item_id, cache)
+            if result:
+                minifigures.append(result)
+    except ConnectionError as e:
+        # throw exceptions if connection has an error or IP has mismatched
+        error = str(e)
+        if "TOKEN_IP_MISMATCHED" in error:
+            return render_template("error.html", 
+                message="Your IP address has changed since registering with BrickLink.",
+                fix="Update your IP address in BrickLink API settings and restart the app."
+            )
+        return render_template("error.html",
+            message="Could not connect to BrickLink.",
+            fix="Check your API credentials in .env and try again."
+        )
 
     # calculate total number of minifigures
     total_figures = len(minifigures)
