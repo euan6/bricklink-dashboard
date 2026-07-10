@@ -275,6 +275,35 @@ canvas {
     margin-top: 2px;
 }
 
+/* error.html specific */
+.error-card {
+    background: #1a1a24;
+    border-left: 3px solid #f0c040;
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 100%;
+    margin-top: 2rem;
+}
+
+.error-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #f0f0f0;
+    margin-bottom: 1rem;
+}
+
+.error-message {
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 0.75rem;
+}
+
+.error-fix {
+    font-size: 13px;
+    color: #f0c040;
+}
+
 /* for sizes under 1280px */
 @media (max-width: 1280px) {
     body {

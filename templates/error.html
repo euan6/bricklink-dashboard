@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Error - Minifigure Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="db-header">
+        <div class="db-title">Minifig <span>Dashboard</span></div>
+    </div>
+    <div class="error-card">
+        <div class="error-title">Something went wrong</div>
+        <div class="error-message">{{ message }}</div>
+        <div class="error-fix">{{ fix }}</div>
+    </div>
+</body>
+</html>
