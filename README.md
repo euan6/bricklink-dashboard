@@ -2,7 +2,7 @@
 
 A locally-hosted web dashboard for tracking and visualising a personal LEGO minifigure collection, built with Flask and the BrickLink API.
 
-![Python](https://img.shields.io/badge/Python-3.x-blue) ![Flask](https://img.shields.io/badge/Flask-3.x-lightgrey) ![BrickLink API](https://img.shields.io/badge/BrickLink-API-f0c040)
+![Python](https://img.shields.io/badge/Python-3.13-blue) ![Flask](https://img.shields.io/badge/Flask-3.1.3-lightgrey) ![BrickLink API](https://img.shields.io/badge/BrickLink-API-f0c040)
 
 ## Features
 
