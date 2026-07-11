@@ -16,7 +16,7 @@ A locally-hosted web dashboard for tracking and visualising a personal LEGO mini
 
 ## Prerequisites
 
-- Python 3.x
+- Python 3.13
 - A BrickLink account with API credentials (consumer key, consumer secret, token, token secret)
 
 ## Setup
@@ -88,7 +88,7 @@ bricklink-dashboard/
 ├── bricklink.py            # BrickLink API calls
 ├── cache.py                # Cache reading, writing, and validation
 ├── config.py               # Credential loading and validation
-├── minifigures.json        # Your manual list of owned item numbers
+├── minifigures.json        # Manual list of owned item numbers
 ├── cache.json              # Auto-generated API response cache (24hr TTL)
 ├── requirements.txt
 ├── templates/
@@ -121,5 +121,5 @@ THEME_PREFIXES = {
 ## Notes
 
 - BrickLink API access requires your registered IP address to match the one making requests. If your home IP changes (common with most UK broadband), update it in your BrickLink API settings.
-- Price data reflects the average sold price for used condition figures on BrickLink's marketplace only.
+- Price data reflects the average sold price for new condition figures on BrickLink's marketplace only.
 - `debug=True` is controlled via `FLASK_DEBUG` in `.env` and should be set to `false` outside of development.
