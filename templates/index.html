@@ -86,7 +86,7 @@
             <!-- start of top 3 sidebar -->
             <div class="sidebar-header">
                 <span class="sidebar-title">Top 3 most valuable</span>
-                <a class="sidebar-link" href="#">View all</a>
+                <a class="sidebar-link" href="{{ url_for('collection') }}">View all</a>
             </div>
             <div class="fig-cards-wrap">
                {% for fig in top_3 %}
