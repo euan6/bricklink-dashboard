@@ -268,11 +268,23 @@ def collection():
     themes = sorted(set(fig["theme"] for fig in minifigures))
     years = sorted(set(fig["year"] for fig in minifigures if fig["year"]), reverse=True)
 
+    # 
+    cached_times = [
+        cache[item_id]["cached_at"]
+        for item_id in item_ids
+        if item_id in cache
+    ]
+    last_updated = (
+        datetime.datetime.fromtimestamp(max(cached_times)).strftime("%d %b %Y, %H:%M")
+        if cached_times else "Never"
+    )
+
     return render_template(
         "collection.html",
         minifigures=minifigures,
         themes=themes,
-        years=years
+        years=years,
+        last_updated=last_updated
     )
 
 if __name__ == "__main__":
