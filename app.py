@@ -236,5 +236,44 @@ def index():
         last_updated=last_updated
     )
 
+@app.route("/collection")
+def collection():
+    cache = cache_module.load_cache()
+    item_ids = load_minifigure_ids()
+    minifigures = []
+
+    try:
+        with ThreadPoolExecutor(max_workers=16) as executor:
+            futures = {executor.submit(get_minifigure_data, item_id, cache): item_id for item_id in item_ids}
+            for future in as_completed(futures):
+                result = future.result()
+                if result:
+                    minifigures.append(result)
+    except ConnectionError as e:
+        error = str(e)
+        if "TOKEN_IP_MISMATCHED" in error:
+            return render_template("error.html",
+                message="Your IP address has changed since registering with BrickLink.",
+                fix="Update your IP address in BrickLink API settings and restart the app."
+            )
+        return render_template("error.html",
+            message="Could not connect to BrickLink.",
+            fix="Check your API credentials in .env and try again."
+        )
+
+    # sort by year, newest first
+    minifigures.sort(key=lambda x: x["year"] or 0, reverse=True)
+
+    # build filter options from actual collection data
+    themes = sorted(set(fig["theme"] for fig in minifigures))
+    years = sorted(set(fig["year"] for fig in minifigures if fig["year"]), reverse=True)
+
+    return render_template(
+        "collection.html",
+        minifigures=minifigures,
+        themes=themes,
+        years=years
+    )
+
 if __name__ == "__main__":
     app.run(debug=config.DEBUG)
