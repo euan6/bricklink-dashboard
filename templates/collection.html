@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collection - Minifigure Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="collection-page">
+
+    <div class="db-header">
+        <a href="{{ url_for('index') }}" class="db-title">Minifig <span>Dashboard</span></a>
+        <div class="db-last-updated">Last updated: {{ last_updated }}</div>
+    </div>
+
+    <div class="filter-bar">
+        <input
+            type="text"
+            id="search"
+            class="filter-search"
+            placeholder="Search by name or item number..."
+        >
+        <select id="filter-theme" class="filter-select">
+            <option value="">All themes</option>
+            {% for theme in themes %}
+            <option value="{{ theme }}">{{ theme }}</option>
+            {% endfor %}
+        </select>
+        <select id="filter-year" class="filter-select">
+            <option value="">All years</option>
+            {% for year in years %}
+            <option value="{{ year }}">{{ year }}</option>
+            {% endfor %}
+        </select>
+        <select id="filter-price" class="filter-select">
+            <option value="">All prices</option>
+            <option value="0-5">Under £5</option>
+            <option value="5-10">£5 - £10</option>
+            <option value="10-20">£10 - £20</option>
+            <option value="20+">Over £20</option>
+        </select>
+    </div>
+
+    <div class="grid" id="collection-grid">
+        <!-- cards go here next -->
+    </div>
+
+    <script id="minifigure-data" type="application/json">{{ minifigures | tojson }}</script>
+    <script src="{{ url_for('static', filename='collection.js') }}"></script>
+
+</body>
+</html>
