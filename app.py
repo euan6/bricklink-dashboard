@@ -152,6 +152,20 @@ def get_minifigure_data(item_no, cache):
 
     return result
 
+def get_all_minifigures():
+    cache = cache_module.load_cache()
+    item_ids = load_minifigure_ids()
+    minifigures = []
+
+    with ThreadPoolExecutor(max_workers=16) as executor:
+        futures = {executor.submit(get_minifigure_data, item_id, cache): item_id for item_id in item_ids}
+        for future in as_completed(futures):
+            result = future.result()
+            if result:
+                minifigures.append(result)
+
+    return minifigures
+
 @app.route("/")
 def index():
     cache = cache_module.load_cache()
