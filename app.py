@@ -165,12 +165,12 @@ def get_all_minifigures():
             if result:
                 minifigures.append(result)
 
-    return minifigures
+    return minifigures, item_ids, cache
 
 @app.route("/")
 def index():
     try:
-        minifigures = get_all_minifigures()
+        minifigures, item_ids, cache = get_all_minifigures()
     except ConnectionError as e:
         # throw exceptions if connection has an error or IP has mismatched
         error = str(e)
@@ -244,7 +244,7 @@ def index():
 @app.route("/collection")
 def collection():
     try:
-        minifigures = get_all_minifigures()
+        minifigures, item_ids, cache = get_all_minifigures()
     except ConnectionError as e:
         error = str(e)
         if "TOKEN_IP_MISMATCHED" in error:
