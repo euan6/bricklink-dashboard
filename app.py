@@ -158,6 +158,7 @@ def get_all_minifigures():
     minifigures = []
 
     with ThreadPoolExecutor(max_workers=16) as executor:
+        # build full list of minifigure data to pass to the template
         futures = {executor.submit(get_minifigure_data, item_id, cache): item_id for item_id in item_ids}
         for future in as_completed(futures):
             result = future.result()
@@ -168,18 +169,8 @@ def get_all_minifigures():
 
 @app.route("/")
 def index():
-    cache = cache_module.load_cache()
-    item_ids = load_minifigure_ids()
-    minifigures = []
-
     try:
-        # build full list of minifigure data to pass to the template
-        with ThreadPoolExecutor(max_workers=20) as executor:
-            futures = {executor.submit(get_minifigure_data, item_id, cache): item_id for item_id in item_ids}
-            for future in as_completed(futures):
-                result = future.result()
-                if result:
-                    minifigures.append(result)
+        minifigures = get_all_minifigures()
     except ConnectionError as e:
         # throw exceptions if connection has an error or IP has mismatched
         error = str(e)
@@ -252,17 +243,8 @@ def index():
 
 @app.route("/collection")
 def collection():
-    cache = cache_module.load_cache()
-    item_ids = load_minifigure_ids()
-    minifigures = []
-
     try:
-        with ThreadPoolExecutor(max_workers=16) as executor:
-            futures = {executor.submit(get_minifigure_data, item_id, cache): item_id for item_id in item_ids}
-            for future in as_completed(futures):
-                result = future.result()
-                if result:
-                    minifigures.append(result)
+        minifigures = get_all_minifigures()
     except ConnectionError as e:
         error = str(e)
         if "TOKEN_IP_MISMATCHED" in error:
