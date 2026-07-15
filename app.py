@@ -167,22 +167,24 @@ def get_all_minifigures():
 
     return minifigures, item_ids, cache
 
+def handle_connection_error(e):
+    error = str(e)
+    if "TOKEN_IP_MISMATCHED" in error:
+        return render_template("error.html",
+            message="Your IP address has changed since registering with BrickLink.",
+            fix="Update your IP address in BrickLink API settings and restart the app."
+        )
+    return render_template("error.html",
+        message="Could not connect to BrickLink.",
+        fix="Check your API credentials in .env and try again."
+    )
+
 @app.route("/")
 def index():
     try:
         minifigures, item_ids, cache = get_all_minifigures()
     except ConnectionError as e:
-        # throw exceptions if connection has an error or IP has mismatched
-        error = str(e)
-        if "TOKEN_IP_MISMATCHED" in error:
-            return render_template("error.html", 
-                message="Your IP address has changed since registering with BrickLink.",
-                fix="Update your IP address in BrickLink API settings and restart the app."
-            )
-        return render_template("error.html",
-            message="Could not connect to BrickLink.",
-            fix="Check your API credentials in .env and try again."
-        )
+        return handle_connection_error(e)
 
     # calculate total number of minifigures
     total_figures = len(minifigures)
@@ -216,13 +218,14 @@ def index():
     # calculate the number of different themes
     num_themes = len(theme_counts)
 
-    # 
     cached_times = [
+        # collect the cache timestamp for each fetched figure
         cache[item_id]["cached_at"]
         for item_id in item_ids
         if item_id in cache
     ]
     last_updated = (
+        # display most recent as last updated
         datetime.datetime.fromtimestamp(max(cached_times)).strftime("%d %b %Y, %H:%M")
         if cached_times else "Never"
     )
@@ -246,16 +249,7 @@ def collection():
     try:
         minifigures, item_ids, cache = get_all_minifigures()
     except ConnectionError as e:
-        error = str(e)
-        if "TOKEN_IP_MISMATCHED" in error:
-            return render_template("error.html",
-                message="Your IP address has changed since registering with BrickLink.",
-                fix="Update your IP address in BrickLink API settings and restart the app."
-            )
-        return render_template("error.html",
-            message="Could not connect to BrickLink.",
-            fix="Check your API credentials in .env and try again."
-        )
+        return handle_connection_error(e)
 
     # sort by year, newest first
     minifigures.sort(key=lambda x: x["year"] or 0, reverse=True)
@@ -264,13 +258,14 @@ def collection():
     themes = sorted(set(fig["theme"] for fig in minifigures))
     years = sorted(set(fig["year"] for fig in minifigures if fig["year"]), reverse=True)
 
-    # 
     cached_times = [
+        # collect the cache timestamp for each fetched figure
         cache[item_id]["cached_at"]
         for item_id in item_ids
         if item_id in cache
     ]
     last_updated = (
+        # display most recent as last updated
         datetime.datetime.fromtimestamp(max(cached_times)).strftime("%d %b %Y, %H:%M")
         if cached_times else "Never"
     )
