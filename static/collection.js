@@ -1,9 +1,10 @@
-const minifigures = JSON.parse(document.getElementsById('minifigure-data').textContent);
+const minifigures = JSON.parse(document.getElementById('minifigure-data').textContent);
 const grid = document.getElementById('collection-grid');
 const search = document.getElementById('search');
 const filterTheme = document.getElementById('filter-theme');
 const filterYear = document.getElementById('filter-year');
 const filterPrice = document.getElementById('filter-price');
+const sortBy = document.getElementById('sort-by');
 
 function priceInRange(price, range) {
     if (!range) return true;
@@ -12,9 +13,8 @@ function priceInRange(price, range) {
     if (range === '0-5') return p < 5;
     if (range === '5-10') return p >= 5 && p < 10;
     if (range === '10-20') return p >= 10 && p < 20;
-    if (range === '20+') return p >= 20
+    if (range === '20+') return p >= 20;
     return true;
-
 }
 
 function renderCards(figures) {
@@ -49,6 +49,18 @@ function renderCards(figures) {
     });
 }
 
+function sortFigures(figures) {
+    const value = sortBy.value;
+    return [...figures].sort((a, b) => {
+        if (value === 'year-desc') return (b.year || 0) - (a.year || 0);
+        if (value === 'year-asc') return (a.year || 0) - (b.year || 0);
+        if (value === 'price-desc') return parseFloat(b.price || 0) - parseFloat(a.price || 0);
+        if (value === 'price-asc') return parseFloat(a.price || 0) - parseFloat(b.price || 0);
+        if (value === 'name-asc') return a.name.localeCompare(b.name);
+        return 0;
+    });
+}
+
 function applyFilters() {
     const query = search.value.toLowerCase();
     const theme = filterTheme.value;
@@ -65,7 +77,7 @@ function applyFilters() {
         return matchesSearch && matchesTheme && matchesYear && matchesPrice;
     });
 
-    renderCards(filtered);
+    renderCards(sortFigures(filtered));
 }
 
 // attach filter listeners
@@ -73,6 +85,7 @@ search.addEventListener('input', applyFilters);
 filterTheme.addEventListener('change', applyFilters);
 filterYear.addEventListener('change', applyFilters);
 filterPrice.addEventListener('change', applyFilters);
+sortBy.addEventListener('change', applyFilters);
 
 // initial render
 renderCards(minifigures);
