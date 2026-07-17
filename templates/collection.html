@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="collection-page">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Collection - Minifigure Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body class="collection-page">
+<body>
 
     <div class="db-header">
         <a href="{{ url_for('index') }}" class="db-title">Minifig <span>Dashboard</span></a>
@@ -38,6 +38,13 @@
             <option value="5-10">£5 - £10</option>
             <option value="10-20">£10 - £20</option>
             <option value="20+">Over £20</option>
+        </select>
+        <select id="sort-by" class="filter-select">
+            <option value="year-desc">Year (newest first)</option>
+            <option value="year-asc">Year (oldest first)</option>
+            <option value="price-desc">Price (highest first)</option>
+            <option value="price-asc">Price (lowest first)</option>
+            <option value="name-asc">Name (A-Z)</option>
         </select>
     </div>
 

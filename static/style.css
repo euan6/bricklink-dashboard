@@ -306,7 +306,8 @@ canvas {
 }
 
 /* collection.html specific */
-.collection-page {
+html.collection-page,
+html.collection-page body {
     overflow: auto;
     height: auto;
     min-height: 100vh;
@@ -362,6 +363,82 @@ canvas {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 1rem;
+}
+
+.col-card {
+    background: #1a1a24;
+    border-radius: 12px;
+    border: 1px solid #2a2a38;
+    overflow: hidden;
+    transition: border-color 0.15s;
+    cursor: pointer;
+}
+
+.col-card:hover {
+    border-color: #f0c040;
+}
+
+.col-card-img {
+    width: 100%;
+    aspect-ratio: 1;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.col-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.col-card-no-image {
+    font-size: 11px;
+    color: #666;
+}
+
+.col-card-body {
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.col-card-id {
+    font-size: 10px;
+    color: #666;
+    letter-spacing: 0.5px;
+}
+
+.col-card-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: #f0f0f0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.col-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.col-card-price {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #f0c040;
+}
+
+.col-card-year {
+    font-size: 11px;
+    color: #666;
 }
 
 /* for sizes under 1280px */
