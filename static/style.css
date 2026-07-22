@@ -372,6 +372,7 @@ html.collection-page body {
     overflow: hidden;
     transition: border-color 0.15s;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .col-card:hover {
