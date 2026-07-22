@@ -26,8 +26,11 @@ function renderCards(figures) {
     }
 
     figures.forEach(fig => {
-        const card = document.createElement('div');
+        const card = document.createElement('a');
         card.className = 'col-card';
+        card.href = `https://www.bricklink.com/v2/catalog/catalogitem.page?M=${fig.id}`;
+        card.target = '_blank';
+        card.rel = 'noopener noreferrer'
 
         const img = fig.image
             ? `<img src="/static/${fig.image}" alt="${fig.name}">`
