@@ -33,7 +33,8 @@ THEME_PREFIXES = {
     "hp": "Harry Potter",
     "pha": "Pharaoh's Quest",
     "col": "Collectible Minifigures",
-    "cty": "City"
+    "cty": "City",
+    "njo": "Ninjago"
 }
 
 def get_theme_from_id(item_no):
